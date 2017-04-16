@@ -11,6 +11,8 @@ public abstract class Actor {
     private int x;
     private int y;
     
+    Actor(){}
+    
     Actor(String name, int hp, char symbol, int x, int y)
     {
         this.name = name;

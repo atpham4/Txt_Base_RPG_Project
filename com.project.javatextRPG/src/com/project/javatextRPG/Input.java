@@ -30,10 +30,16 @@ public class Input {
 	private boolean validInput(char input)
 	{
 		//1. Return boolean if input is/isn't valid
-		if(input != 'w' || input != 'a' || input != 's' || input != 'd')
+		if(input == 'w' || input == 'a' || input == 's' || input == 'd')
+		{
+			System.out.println();
+			return true;
+		}
+		else
 		{
 			System.out.println("Entered invalid key");
+			return false;
 		}
-		return true;
+			
 	}
 }

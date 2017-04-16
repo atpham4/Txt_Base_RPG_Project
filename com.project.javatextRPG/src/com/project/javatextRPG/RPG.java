@@ -11,7 +11,10 @@ public class RPG {
 		while (map.getPlayerHP() > 0 )
 		{
 			map.movePlayer(in.readInput());
+			map.drawMap();
 		}
+		
+		System.out.println("GAME OVER");
 	}
 
 }
