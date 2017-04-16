@@ -1,32 +1,49 @@
 package com.project.javatextRPG;
 
+import java.util.Random;
+
 public class Map{
 	private final int SIZE;
-	private final int PLAY_LOCATION;
+	private final int PLAYER_LOCATION;
 	private char[][] map;
 	private final Player player;
 	private final Monster monster;
 	private final Combat combat;
 	
 	public Map()
-	{
-		
+	{	
 		//1. Initialize SIZE and PLAYER_LOCATION
+		SIZE = 9;
+		PLAYER_LOCATION = 5;
+		
 		//2. Call initializeMap()
-		//3. Call generateRandomLocation() for monsterX and monsterY
-		//4. Ensure monster is not generated in the same location as player
-		//5. Call Player, Monster, and Combat constructors
-		//6. Initialize 9x9 map of char
 		initializeMap();
+		
+		//3. Call generateRandomLocation() for monsterX and monsterY
+		int monsterX = generateRandomLocation();
+		int monsterY = generateRandomLocation();
+		
+		//4. Ensure monster is not generated in the same location as player
+		if( monsterX == PLAYER_LOCATION && monsterY == PLAYER_LOCATION)
+		{
+			monsterX = generateRandomLocation();
+			monsterY = generateRandomLocation();			
+		}
+		//5. Call Player, Monster, and Combat constructors
+		player = new Player("Link", 100, 'P', PLAYER_LOCATION, PLAYER_LOCATION);
+		monster = new Monster("Ganon", 50, 'M', monsterX, monsterY);
+		combat = new Combat();
+		
+		//6. Initialize 9x9 map of char
 	}
 	
 	private void initializeMap()
 	{
 		//Initialize each cell of map to '-'
-		map = new char [9][9];
-		for (int row = 0; row < 9; row++)
+		map = new char [SIZE][SIZE];
+		for (int row = 0; row < SIZE; row++)
 		{
-			for (int col = 0; col < 9; col ++)
+			for (int col = 0; col < SIZE; col ++)
 			{
 				map[row][col] = '-';
 			}
@@ -37,9 +54,11 @@ public class Map{
 	{
 		//1. Call initializeMap()
 		initializeMap();
+		
 		//2. Call assignActorLocation() for player and monster objects
-		Actor p = null;
-		assignActorLocation(p);
+		assignActorLocation(player);
+		assignActorLocation(monster);
+		
 		//3. Print map to screen with a space between each element
 		for (int row = 0; row < 9; row++)
 		{
@@ -58,6 +77,7 @@ public class Map{
 		//1. Get actor x and y location
 		actor.getX();
 		actor.getY();
+		
 		//2. Assign actor.getSymbol() to location on map
 		actor.getSymbol();
 	}
@@ -65,31 +85,70 @@ public class Map{
 	private int generateRandomLocation()
 	{
 		//1. Return random number within range of map edges
-		return PLAY_LOCATION;
+		Random rand = new Random();
+		int Location = rand.nextInt(8)+0;
+		return Location;
 
 	}
 	
 	public void movePlayer(char move)
 	{
 		//1. Get player current location
+		int CurrentX = player.getX();
+		int CurrentY = player.getY();
+		
 		//2. Use switch statement to determine player new location or quit
+		try
+		{
+			if (move == 'q')
+				throw new Exception();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exit game");
+			System.exit(0);
+		}
+		if(move == 'w')
+			player.setX(CurrentY - 1); 
+		else if (move == 's')
+			player.setY(CurrentY + 1);
+		else if (move == 'a')
+			player.setX(CurrentX - 1);
+		else if (move == 'd')
+			player.setX(CurrentX + 1);
+		
 		//3. Call validCoordinates() to determine if player is at map edge
+		validCoordinates(CurrentX, CurrentY);
+		
 		//4. If player EncountersMonster() call combat.initCombat()
+		if (playerEncountersMonster())
+			combat.initCombat(player, monster);
 	}
 	
 	private boolean playerEncountersMonster()
 	{
 		//1. Return true if player location matches monster location
+		if (monster.getX() == player.getX() && monster.getY() == player.getY())
+		{
+			System.out.println(player.getName() + "encounters" + monster.getName());
+			combat.initCombat(player, monster);
+		}
+		return true;
 	}
 	
 	private boolean validCoordinates(int newX, int newY)
 	{
 		//1. Return true if player location within range of map
+		if(newX > 9 || newY > 9)
+		{
+			System.out.println("Error; Player cannot move outside of the map");
+		}
+			return true;
+	}
+	
+	public int getPlayerHP()
+	{
+		return player.getHP();
 	}
 
-	@Override
-	int generateRandomAttack() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

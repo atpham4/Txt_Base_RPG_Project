@@ -5,10 +5,13 @@ public class RPG {
 	public static void main(String[] args)
 	{
 		Map map = new Map();
-		Input Input = new Input();
+		Input in = new Input();
 		map.drawMap();
 		
-		while (true){/.args..}
+		while (map.getPlayerHP() > 0 )
+		{
+			map.movePlayer(in.readInput());
+		}
 	}
 
 }
